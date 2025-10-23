@@ -130,7 +130,6 @@ button:hover {
 }
 
 /* ---------- Dining Philosophers ---------- */
-/* ---------- Dining Philosophers (Perfectly Organized Layout) ---------- */
 .dp-table-container {
   position: relative;
   width: 550px;

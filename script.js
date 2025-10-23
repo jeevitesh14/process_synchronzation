@@ -91,11 +91,9 @@ function resetBuffer() {
 }
 
 renderBuffer();
-
 // ---------- Dining Philosophers ----------
 let philosophers = [];
 let forks = [];
-let interval = null;
 
 function createTable() {
   const table = document.getElementById('table');
@@ -104,90 +102,79 @@ function createTable() {
   forks = [];
 
   const num = 5;
-  const centerX = 275;  // center of table container (≈ half of 550px)
+  const centerX = 275;
   const centerY = 275;
-  const radiusPhilosophers = 220;  // distance from center for philosophers
-  const radiusForks = 180;         // distance from center for forks
+  const radiusPhilosophers = 220;
+  const radiusForks = 200;
 
   for (let i = 0; i < num; i++) {
-    const angle = (2 * Math.PI * i) / num - Math.PI / 2; // start at top (12 o'clock)
+    const angle = (2 * Math.PI * i) / num - Math.PI / 2;
 
-    // Philosopher position
+    // 👤 Philosopher
     const phil = document.createElement('div');
     phil.classList.add('philosopher', 'thinking');
     phil.textContent = `P${i + 1}`;
     phil.style.left = `${centerX + radiusPhilosophers * Math.cos(angle) - 45}px`;
     phil.style.top = `${centerY + radiusPhilosophers * Math.sin(angle) - 45}px`;
+
+    phil.addEventListener('click', () => togglePhilosopher(i));
     table.appendChild(phil);
     philosophers.push(phil);
+  }
 
-    // Fork position (midpoint between philosophers)
-    const forkAngle = angle + Math.PI / num;
+  // 🍴 Forks placed correctly between philosophers
+  for (let i = 0; i < num; i++) {
+    const angle = (2 * Math.PI * i) / num - Math.PI / 2 + Math.PI / num;
     const fork = document.createElement('div');
     fork.classList.add('fork');
-    fork.style.left = `${centerX + radiusForks * Math.cos(forkAngle) - 7}px`;
-    fork.style.top = `${centerY + radiusForks * Math.sin(forkAngle) - 45}px`;
-    fork.style.transform = `rotate(${(forkAngle * 180) / Math.PI}deg)`;
+    fork.style.left = `${centerX + radiusForks * Math.cos(angle) - 7}px`;
+    fork.style.top = `${centerY + radiusForks * Math.sin(angle) - 45}px`;
+    fork.style.transform = `rotate(${(angle * 180) / Math.PI}deg)`;
     table.appendChild(fork);
     forks.push(fork);
   }
 
-  document.getElementById('dpStatus').textContent = '';
+  document.getElementById('dpStatus').textContent =
+    '🖱️ Click on a philosopher to let them try to eat.';
 }
 
+function togglePhilosopher(i) {
+  const phil = philosophers[i];
+  const leftFork = forks[i]; // left fork for philosopher i
+  const rightFork = forks[(i - 1 + forks.length) % forks.length]; // right fork (previous one)
+  const leftNeighbor = philosophers[(i - 1 + philosophers.length) % philosophers.length];
+  const rightNeighbor = philosophers[(i + 1) % philosophers.length];
+  const status = document.getElementById('dpStatus');
 
-// Start Dining Philosophers
-function startDining() {
-  if (interval) return;
-  document.getElementById('dpStatus').textContent = '🍴 Philosophers are thinking and eating...';
+  // Stop eating
+  if (phil.classList.contains('eating')) {
+    phil.classList.remove('eating');
+    phil.classList.add('thinking');
+    leftFork.classList.remove('active');
+    rightFork.classList.remove('active');
+    status.textContent = `${phil.textContent} finished eating. 🍽️`;
+    return;
+  }
 
-  interval = setInterval(() => {
-    const i = Math.floor(Math.random() * philosophers.length);
-    const phil = philosophers[i];
-    const leftFork = forks[i];
-    const rightFork = forks[(i + 1) % forks.length];
-
-    if (phil.classList.contains('eating')) {
-      phil.classList.remove('eating');
-      phil.classList.add('thinking');
-      leftFork.classList.remove('active');
-      rightFork.classList.remove('active');
-      document.getElementById('dpStatus').textContent = `${phil.textContent} finished eating`;
-    } else {
-      const leftNeighbor = philosophers[(i - 1 + philosophers.length) % philosophers.length];
-      const rightNeighbor = philosophers[(i + 1) % philosophers.length];
-
-      if (!leftNeighbor.classList.contains('eating') && !rightNeighbor.classList.contains('eating')) {
-        phil.classList.add('eating');
-        phil.classList.remove('thinking');
-        leftFork.classList.add('active');
-        rightFork.classList.add('active');
-        document.getElementById('dpStatus').textContent = `${phil.textContent} is eating`;
-      } else {
-        document.getElementById('dpStatus').textContent = `${phil.textContent} is waiting`;
-      }
-    }
-  }, 1200);
+  // Try to eat if neighbors aren’t eating
+  if (!leftNeighbor.classList.contains('eating') && !rightNeighbor.classList.contains('eating')) {
+    phil.classList.add('eating');
+    phil.classList.remove('thinking');
+    leftFork.classList.add('active');
+    rightFork.classList.add('active');
+    status.textContent = `${phil.textContent} started eating. 🥢`;
+  } else {
+    phil.classList.add('waiting');
+    status.textContent = `${phil.textContent} is waiting (neighbors are eating). ⏳`;
+    setTimeout(() => phil.classList.remove('waiting'), 1000);
+  }
 }
 
-// Stop Dining
-function stopDining() {
-  clearInterval(interval);
-  interval = null;
-  philosophers.forEach(p => p.classList.remove('eating'));
-  philosophers.forEach(p => p.classList.add('thinking'));
-  forks.forEach(f => f.classList.remove('active'));
-  document.getElementById('dpStatus').textContent = '⛔ Dining stopped.';
-}
-
-// Reset Dining
 function resetDining() {
-  stopDining();
   createTable();
   document.getElementById('dpStatus').textContent = '🔄 Dining reset.';
 }
 
-// Initialize
 createTable();
 
 // ---------- Theme Toggle ----------
