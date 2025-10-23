@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Process Synchronization Simulator</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+  <!-- 🌌 Intro Screen -->
+  <div id="introScreen" class="intro-screen">
+    <h1 class="title glow">Process Synchronization Simulator</h1>
+<p class="subtitle glow fade-in">Click Enter to explore Producer-Consumer & Dining Philosophers</p>
+
+    <button class="enter-btn fade-in" onclick="enterSimulation()">Enter Simulation</button>
+  </div>
+
+  <!-- 🌐 Main App (hidden initially) -->
+  <div id="mainContent" class="hidden">
+
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+
+    <h1 class="main-title">Select a Problem</h1>
+    <div class="options">
+      <button onclick="showSection('producerConsumer')">Producer - Consumer</button>
+      <button onclick="showSection('diningPhilosopher')">Dining Philosophers</button>
+    </div>
+
+    <!-- Producer-Consumer Section -->
+    <section id="producerConsumer" class="content hidden fade-in">
+      <h2>Producer - Consumer Problem</h2>
+      <div class="buffer" id="buffer"></div>
+      <div class="controls">
+        <button onclick="produce()">Produce</button>
+        <button onclick="consume()">Consume</button>
+      </div>
+      <p id="pcStatus"></p>
+    </section>
+
+    <!-- Dining Philosophers Section -->
+    <section id="diningPhilosopher" class="content hidden fade-in">
+  <h2>Dining Philosophers Problem</h2>
+
+  <!-- Button controls at top -->
+  <div class="dp-controls">
+    <button onclick="startDining()">Start</button>
+    <button onclick="stopDining()">Stop</button>
+    <button onclick="resetDining()">Reset</button>
+  </div>
+
+  <!-- Circular table -->
+  <div class="dp-table-container">
+    <div class="table" id="table"></div>
+  </div>
+
+  <p id="dpStatus"></p>
+</section>
+
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
