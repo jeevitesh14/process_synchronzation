@@ -130,60 +130,92 @@ button:hover {
 }
 
 /* ---------- Dining Philosophers ---------- */
+/* ---------- Dining Philosophers (Perfectly Organized Layout) ---------- */
 .dp-table-container {
   position: relative;
-  width: 350px;
-  height: 350px;
-  margin: 20px auto;
+  width: 550px;
+  height: 550px;
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.table { position: relative; width: 100%; height: 100%; }
+/* Remove the glowing table circle */
+.table {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: none;       /* no gradient or color */
+  border: none;           /* remove circle border */
+  box-shadow: none;       /* remove inner glow */
+}
 
+/* Philosophers */
 .philosopher {
   position: absolute;
-  width: 60px; height: 60px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   border: 2px solid #00ffff;
-  display: flex; justify-content: center; align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
   font-weight: bold;
-  transition: 0.5s;
-}
-
-.philosopher.thinking { 
-  background: transparent; 
-  box-shadow: none; 
+  color: #00ffff;
+  background: rgba(0, 0, 0, 0.4);
+  text-shadow: 0 0 5px #00ffff;
+  transition: all 0.5s ease;
 }
 
 .philosopher.eating {
-  background: #00ffff; 
-  color: #000; 
-  box-shadow: 0 0 15px #00ffff, 0 0 30px #ff4081, 0 0 45px #ffeb3b;
+  background: #00ffff;
+  color: #000;
+  box-shadow: 0 0 25px #00ffff, 0 0 40px #ff4081, 0 0 60px #ffeb3b;
   animation: eatingGlow 1.2s infinite alternate;
 }
 
 @keyframes eatingGlow {
-  0% { box-shadow: 0 0 15px #00ffff, 0 0 30px #ff4081; }
-  50% { box-shadow: 0 0 30px #ffeb3b, 0 0 45px #ff4081; }
-  100% { box-shadow: 0 0 15px #00ffff, 0 0 30px #ff4081; }
+  0% { box-shadow: 0 0 25px #00ffff, 0 0 40px #ff4081; }
+  50% { box-shadow: 0 0 35px #ffeb3b, 0 0 55px #ff4081; }
+  100% { box-shadow: 0 0 25px #00ffff, 0 0 40px #ff4081; }
 }
 
+/* Forks placed evenly between philosophers */
 .fork {
   position: absolute;
-  width: 12px; height: 60px;
+  width: 14px;
+  height: 90px;
   background: #00ffff;
-  border-radius: 5px;
+  border-radius: 6px;
   opacity: 0.3;
-  transition: all 0.4s ease;
   transform-origin: center;
+  transition: all 0.4s ease;
 }
 
-.fork.active { 
+.fork.active {
   opacity: 1;
-  transform: rotate(20deg) translateY(-5px); 
-  box-shadow: 0 0 10px #00ffff, 0 0 20px #ffeb3b, 0 0 30px #ff4081;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px #00ffff, 0 0 25px #ffeb3b, 0 0 35px #ff4081;
 }
+
 
 /* ---------- Section Transitions ---------- */
 .content { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
 .content.show { opacity: 1; transform: translateY(0); }
 .content.hide { opacity: 0; transform: translateY(-20px); }
+/* Reduce spacing on the main selection page */
+.main-title {
+  margin-bottom: 5px; /* smaller gap below "Select a Problem" */
+}
+
+/* Reduce space between the problem buttons */
+.options {
+  margin-bottom: 5px; /* tighter spacing below the buttons */
+}
+
+/* Reduce space before section headings when a problem is selected */
+.content h2 {
+  margin-top: 5px; /* reduce top margin */
+}

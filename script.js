@@ -104,35 +104,37 @@ function createTable() {
   forks = [];
 
   const num = 5;
-  const radius = 120;
-  const centerX = 175;
-  const centerY = 175;
+  const centerX = 275;  // center of table container (≈ half of 550px)
+  const centerY = 275;
+  const radiusPhilosophers = 220;  // distance from center for philosophers
+  const radiusForks = 180;         // distance from center for forks
 
   for (let i = 0; i < num; i++) {
+    const angle = (2 * Math.PI * i) / num - Math.PI / 2; // start at top (12 o'clock)
+
+    // Philosopher position
     const phil = document.createElement('div');
     phil.classList.add('philosopher', 'thinking');
     phil.textContent = `P${i + 1}`;
-
-    const angle = (2 * Math.PI * i) / num;
-    phil.style.left = `${centerX + radius * Math.cos(angle) - 30}px`;
-    phil.style.top = `${centerY + radius * Math.sin(angle) - 30}px`;
-
+    phil.style.left = `${centerX + radiusPhilosophers * Math.cos(angle) - 45}px`;
+    phil.style.top = `${centerY + radiusPhilosophers * Math.sin(angle) - 45}px`;
     table.appendChild(phil);
     philosophers.push(phil);
 
+    // Fork position (midpoint between philosophers)
+    const forkAngle = angle + Math.PI / num;
     const fork = document.createElement('div');
     fork.classList.add('fork');
-    const forkAngle = angle + Math.PI / num;
-    fork.style.left = `${centerX + (radius - 50) * Math.cos(forkAngle)}px`;
-    fork.style.top = `${centerY + (radius - 50) * Math.sin(forkAngle)}px`;
+    fork.style.left = `${centerX + radiusForks * Math.cos(forkAngle) - 7}px`;
+    fork.style.top = `${centerY + radiusForks * Math.sin(forkAngle) - 45}px`;
     fork.style.transform = `rotate(${(forkAngle * 180) / Math.PI}deg)`;
-
     table.appendChild(fork);
     forks.push(fork);
   }
 
   document.getElementById('dpStatus').textContent = '';
 }
+
 
 // Start Dining Philosophers
 function startDining() {
